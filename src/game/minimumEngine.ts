@@ -1,4 +1,4 @@
-import { Application, Container, Ticker } from 'pixi.js';
+import { Application, Container, Ticker, Text } from 'pixi.js';
 import {ScreenManager} from "./screenManagement/screenManager.ts";
 
 export class MinimumEngine {
@@ -16,9 +16,20 @@ export class MinimumEngine {
         // Root container that screens draw into
         this.stage = new Container();
         this.ticker = new Ticker();
+        this.ticker.start();
         this.screenManager = new ScreenManager();
         this.stage.addChild(this.screenManager['_root']);
         this.app.stage.addChild(this.stage);
+
+        const fpsText = new Text(`FPS: ${this.ticker.FPS.toFixed(2)}`, { fontSize: 12, fill: 0xffffff });
+        fpsText.position.set(10, 10);
+        this.stage.addChild(fpsText);
+        // fps display
+        this.ticker.add((delta) => {
+             //console.log(`FPS: ${this.ticker.FPS.toFixed(2)}`);
+            // also as persistant text object in the corner
+            fpsText.text = `FPS: ${this.ticker.FPS.toFixed(2)}`;
+        });
     }
 
     public resize(): void {

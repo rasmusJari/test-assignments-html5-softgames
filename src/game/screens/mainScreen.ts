@@ -67,7 +67,7 @@ export class MainScreen extends Screen {
             buttonAnimations,
             () => {
                 console.log('Ace of Shadows button pressed');
-                //engine().screenManager.changeScreen(new AceOfShadowScreen());
+                engine().screenManager.changeScreen(new AceOfShadowScreen());
             }
         );
         this.addChild(this._button_aos);

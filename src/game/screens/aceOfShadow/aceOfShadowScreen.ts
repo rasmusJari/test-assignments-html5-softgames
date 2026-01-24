@@ -13,10 +13,8 @@ export class AceOfShadowScreen extends Screen{
     override async init(): Promise<void> {
         console.log("AceOfShadowScreen initialized");
         
-        engine().renderer.background.color = 0x000000;
-        
         this._aceOfShadow = new AceOfShadow();
-        this._aceOfShadow.init();
+        await this._aceOfShadow.init();
     }
     
     override async enter(): Promise<void> {
@@ -24,4 +22,8 @@ export class AceOfShadowScreen extends Screen{
         this._aceOfShadow.start();
     }
 
+    resize(width: number, height: number) {
+        
+        this._aceOfShadow.resize(width, height);
+    }
 }
