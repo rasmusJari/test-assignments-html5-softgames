@@ -1,0 +1,55 @@
+import { Application, Container, Ticker } from 'pixi.js';
+import {ScreenManager} from "./screenManagement/screenManager.ts";
+
+export class MinimumEngine {
+    public static getInstance(): MinimumEngine {return this.instance;}
+    private static instance: MinimumEngine;
+    public readonly app: Application;
+    public readonly stage: Container;
+    public readonly ticker: Ticker;
+    public readonly screenManager: ScreenManager;
+
+    constructor(app: Application) {
+        MinimumEngine.instance = this;
+        console.log('MinimumEngine initialized');
+        this.app = app;
+        // Root container that screens draw into
+        this.stage = new Container();
+        this.ticker = new Ticker();
+        this.screenManager = new ScreenManager();
+        this.stage.addChild(this.screenManager['_root']);
+        this.app.stage.addChild(this.stage);
+    }
+
+    public resize(): void {
+        this.screenManager.resize();
+        // If using resizeTo: window, Pixi already resized internally
+        // This method exists for consistency + future control
+    }
+
+    public get width(): number {
+        return this.app.renderer.width;
+    }
+
+    public get height(): number {
+        return this.app.renderer.height;
+    }
+}
+
+
+let instance: MinimumEngine | null = null;
+
+/**
+ * Get the main application engine
+ * This is a simple way to access the engine instance from anywhere in the app
+ */
+
+export function engine(): MinimumEngine {
+    return instance!;
+}
+
+export function setEngine(app: MinimumEngine) {
+    console.log('MinimumEngine setEngine');
+  instance = app;
+}
+
