@@ -7,7 +7,6 @@ import {DialogManager} from "./dialogManager.ts";
 export class Dialog extends Container {
     private _avatar: Actor;
     private _text: string;
-
     private _textPaddingLeft: number = 10;
     private _textPaddingTop: number = 10;
     private _textBoxX: number = 100;
@@ -39,9 +38,6 @@ export class Dialog extends Container {
     
     // draw dialog text box and avatar
     public draw(): void {
-        // Placeholder for drawing logic
-        // console.log(`Drawing dialog for ${this._avatar.actorName}: ${this._text}`);
-        
         // box:
         this._rectangle = new Sprite(Texture.WHITE);
         this._rectangle.tint = 0xFF0000;
@@ -51,6 +47,7 @@ export class Dialog extends Container {
         this._rectangle.x = this._textBoxX;
         this._rectangle.y = this._textBoxY;
         this.addChild(this._rectangle);
+        
         // draw avatar:
         this._avatarSprite = new Sprite(this._avatar.actorAvatar);
         if(this._avatar.alignment == ActorAlignment.LEFT){
@@ -66,61 +63,19 @@ export class Dialog extends Container {
 
         console.log(text);
         this.addChild(text);
-        
-        // this._richText = new RichTextSprite(this._dialogManager.getEmojis(), { fontSize: 24, fill: 0xffffff });
+
         this._richText = new RichTextSprite(
             { fontSize: 24, fill: 0xffffff , wordWrap: true, wordWrapWidth: this._textBoxWidth },
             this._dialogManager.getEmojis(), this._textBoxWidth * 0.8
         )
-        // this._richText = new RichTextSprite(
-        //     { fontSize: 24, fill: 0xffffff , wordWrap: true, wordWrapWidth: this._textBoxWidth },
-        //     { emojiMap: this._dialogManager.getEmojis(), placeholderChar: '_' }
-        // );
+
         this._richText.x = this._textBoxX + this._textPaddingLeft;
         this._richText.y = this._textBoxY + this._textPaddingTop;
         this._richText.setText(this._text);
         this.addChild(this._richText);
-        // // draw multi line text:
-        // // Break text into multiple lines
-        // const lines = this.wrapText(this._richText.getText().text, this._textBoxWidth, this._richText);
-        // const lineHeight = this._richText.height || 32;
-        //
-        // // Draw each line using RichTextSprite
-        // let yOffset = 0;
-        // lines.forEach(line => {
-        //     this._richText.setText(line);
-        //     this._richText.x = this._textBoxX + 10; // padding
-        //     this._richText.y = this._textBoxY + 10 + yOffset;
-        //     MinimumEngine.getInstance().stage.addChild(this._richText);
-        //
-        //     yOffset += lineHeight * 1.2; // line spacing
-        // });
+
     }
 
-    // private wrapText(text: string, maxWidth: number, richText: RichTextSprite): string[] {
-    //     const words = text.split(' ');
-    //     const lines: string[] = [];
-    //     let currentLine = '';
-    //
-    //     words.forEach(word => {
-    //         const testLine = currentLine.length === 0 ? word : currentLine + ' ' + word;
-    //        
-    //         const metrics = new Text(testLine.replace(/\{[^}]+\}/g, ''), richText['_textObject'].style);
-    //         if (metrics.width > maxWidth && currentLine.length > 0) {
-    //             lines.push(currentLine);
-    //             currentLine = word;
-    //         } else {
-    //             currentLine = testLine;
-    //         }
-    //     });
-    //
-    //     if (currentLine.length > 0) {
-    //         lines.push(currentLine);
-    //     }
-    //
-    //     return lines;
-    // }
-    
     public resize(width: number, height: number): void {
         if(this._avatar.alignment == ActorAlignment.LEFT){
             this._avatarSprite.x = this._textBoxX - this._avatarSprite.width * 0.5;
