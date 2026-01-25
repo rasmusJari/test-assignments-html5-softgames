@@ -2,8 +2,9 @@ import {Assets, Container, Sprite, Text, Texture, Ticker} from 'pixi.js';
 import {Screen} from './screen.ts';
 import {FancyButton} from "@pixi/ui";
 import {createFancyButton} from "../ui/createButton.ts";
-import {AceOfShadowScreen} from "./aceOfShadow/aceOfShadowScreen.ts";
+import {AceOfShadowScreen} from "./gameScreens/aceOfShadowScreen.ts";
 import {engine, MinimumEngine} from "../minimumEngine.ts";
+import {PhoenixFlame} from "./gameScreens/phoenixFlame.ts";
 
 export class MainScreen extends Screen {
     private _label!: Text;
@@ -95,6 +96,7 @@ export class MainScreen extends Screen {
             buttonAnimations,
             () => {
                 console.log('Phoenix Flame button pressed');
+                engine().screenManager.changeScreen(new PhoenixFlame());
             }
         );
         this.addChild(this._button_pf);

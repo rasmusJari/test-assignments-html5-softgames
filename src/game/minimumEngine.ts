@@ -21,13 +21,12 @@ export class MinimumEngine {
         this.stage.addChild(this.screenManager['_root']);
         this.app.stage.addChild(this.stage);
 
-        const fpsText = new Text(`FPS: ${this.ticker.FPS.toFixed(2)}`, { fontSize: 12, fill: 0xffffff });
+        const fpsStyle = { fontSize: 16, fill: 0xffffff };
+        const fpsText = new Text({ text: 'FPS: 0', style: fpsStyle });
         fpsText.position.set(10, 10);
         this.stage.addChild(fpsText);
         // fps display
         this.ticker.add((delta) => {
-             //console.log(`FPS: ${this.ticker.FPS.toFixed(2)}`);
-            // also as persistant text object in the corner
             fpsText.text = `FPS: ${this.ticker.FPS.toFixed(2)}`;
         });
     }
