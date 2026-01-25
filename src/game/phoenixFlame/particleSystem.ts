@@ -1,11 +1,32 @@
 import { ParticleContainer, Particle, Texture } from 'pixi.js';
+import { lerp } from '../../engine/utils/maths.ts';
+import { lerpColorSafe } from '../ColorLerp.ts';
 import {randomRange} from "../../engine/utils/random.ts";
-import {lerp} from "../../engine/utils/maths.ts";
-import {lerpColorSafe} from "../ColorLerp.ts";
 
+export interface ParticleConfig {
+    x: number;
+    y: number;
+    velocityXMin?: number;
+    velocityXMax?: number;
+    velocityYMin?: number;
+    velocityYMax?: number;
+    lifetime?: number;
+    startColor?: number;
+    endColor?: number;
+    startAlpha?: number;
+    endAlpha?: number;
+    startScale?: number;
+    endScale?: number;
+    rotation?: number;
+    onComplete?: () => void;
+}
 
 interface MyParticle {
     particle: Particle;
+    velocityXMin: number;
+    velocityXMax: number;
+    velocityYMin: number;
+    velocityYMax: number;
     velocityX: number;
     velocityY: number;
     lifetime: number;
@@ -16,8 +37,8 @@ interface MyParticle {
     endAlpha: number;
     startScale: number;
     endScale: number;
+    rotation: number;
     active: boolean;
-    rotationSpeed: number;
     onComplete?: () => void;
 }
 
@@ -27,10 +48,10 @@ export class ParticleSystem {
     private _texture: Texture;
     private _maxParticles: number;
     private _emitterTimer = 0;
-    private _emitterRate = 0.05; // seconds per spawn
+    private _emitterRate = 0.05; // seconds per particle
     private _emitterX = 0;
     private _emitterY = 0;
-    private _rotationSpeed = 0;
+    private _defaultConfig: Partial<ParticleConfig> = {};
 
     constructor(container: ParticleContainer, texture: Texture, maxParticles = 500) {
         this._container = container;
@@ -39,23 +60,27 @@ export class ParticleSystem {
         this._container.blendMode = 'add';
 
         // Pre-create particle pool
-        for (let i = 0; i < this._maxParticles; i++) {
+        for (let i = 0; i < maxParticles; i++) {
             const particle = new Particle({
-                texture: this._texture,
+                texture: texture,
                 x: 0,
                 y: 0,
+                alpha: 0,
                 scaleX: 0.3,
                 scaleY: 0.3,
                 rotation: 0,
-                alpha: 0,
                 anchorX: 0.5,
-                anchorY: 0.5
+                anchorY: 0.5,
             });
 
             this._container.addParticle(particle);
 
             this._particles.push({
                 particle,
+                velocityXMin: 0,
+                velocityXMax: 0,
+                velocityYMin: 0,
+                velocityYMax: 0,
                 velocityX: 0,
                 velocityY: 0,
                 lifetime: 0,
@@ -66,13 +91,18 @@ export class ParticleSystem {
                 endAlpha: 0,
                 startScale: 0.3,
                 endScale: 0,
+                rotation: 0,
                 active: false,
-                rotationSpeed: 0,
             });
         }
     }
 
-    /** Set emitter position (for automatic spawning) */
+    /** Set default config used for all particles unless overridden */
+    public setDefaultConfig(config: Partial<ParticleConfig>) {
+        this._defaultConfig = config;
+    }
+
+    /** Set emitter position for continuous emission */
     public setEmitterPosition(x: number, y: number) {
         this._emitterX = x;
         this._emitterY = y;
@@ -83,22 +113,8 @@ export class ParticleSystem {
         this._emitterRate = rate;
     }
 
-    /** Spawn a particle manually or reuse an inactive one */
-    public spawn(
-        x: number,
-        y: number,
-        lifetime = 2,
-        velocityX?: number,
-        velocityY: number = -300,
-        startColor = 0xffa53d,
-        endColor = 0xffa53d,
-        startAlpha = 1,
-        endAlpha = 0,
-        startScale = 0.5,
-        endScale = 0,
-        rotationSpeed = 2,
-        onComplete?: () => void
-    ) {
+    /** Spawn a particle using external config */
+    public spawn(config: ParticleConfig) {
         let p = this._particles.find(p => !p.active);
 
         // If no inactive particle, recycle the oldest
@@ -108,57 +124,60 @@ export class ParticleSystem {
             );
         }
 
-        // Initialize particle
-        p.particle.x = x;
-        p.particle.y = y;
-        p.particle.alpha = startAlpha;
-        p.particle.scaleX = p.particle.scaleY = startScale;
-        p.particle.rotation = Math.random() * Math.PI * 2;
-        p.rotationSpeed = rotationSpeed;
+        const fullConfig: ParticleConfig = { ...this._defaultConfig, ...config };
 
-        p.velocityX = velocityX ?? (Math.random() - 0.5) * 200;
-        p.velocityY = velocityY ?? -500;
-        p.lifetime = lifetime;
+        p.particle.x = fullConfig.x;
+        p.particle.y = fullConfig.y;
+        p.particle.alpha = fullConfig.startAlpha ?? 1;
+        p.particle.scaleX = p.particle.scaleY = fullConfig.startScale ?? 0.3;
+        p.particle.rotation = fullConfig.rotation ?? Math.random() * Math.PI * 2;
+
+        p.velocityXMin = fullConfig.velocityXMin ?? 0;
+        p.velocityXMax = fullConfig.velocityXMax ?? 0;
+        p.velocityYMin = fullConfig.velocityYMin ?? 0;
+        p.velocityYMax = fullConfig.velocityYMax ?? 0;
+        p.velocityX = randomRange(p.velocityXMin, p.velocityXMax);
+        p.velocityY = randomRange(p.velocityYMin, p.velocityYMax);
+        
+        p.lifetime = fullConfig.lifetime ?? 1;
         p.age = 0;
-        p.startColor = startColor;
-        p.endColor = endColor;
-        p.startAlpha = startAlpha;
-        p.endAlpha = endAlpha;
-        p.startScale = startScale;
-        p.endScale = endScale;
+        p.startColor = fullConfig.startColor ?? 0xffffff;
+        p.endColor = fullConfig.endColor ?? 0xffffff;
+        p.startAlpha = fullConfig.startAlpha ?? 1;
+        p.endAlpha = fullConfig.endAlpha ?? 0;
+        p.startScale = fullConfig.startScale ?? 0.3;
+        p.endScale = fullConfig.endScale ?? 0;
+        p.rotation = fullConfig.rotation ?? 0;
         p.active = true;
-        p.onComplete = onComplete;
+        p.onComplete = fullConfig.onComplete;
 
         p.particle.alpha = p.startAlpha;
     }
 
     /** Update all particles and automatic emitter */
     public update(dt: number) {
-        // Automatic emitter
+        // Continuous emitter
         this._emitterTimer += dt;
         while (this._emitterTimer >= this._emitterRate) {
             this._emitterTimer -= this._emitterRate;
-            this.spawn(
-                this._emitterX + randomRange(-2, 2),
-                this._emitterY + randomRange(-2, 2)
-            );
+            this.spawn({ x: this._emitterX, y: this._emitterY });
         }
 
-        // Update particles
+        // Update all active particles
         for (const p of this._particles) {
             if (!p.active) continue;
 
             p.age += dt;
-            p.lifetime -= dt;
-            const t = (1 - p.lifetime) / p.lifetime;
+            const t = Math.min(p.age / p.lifetime, 1);
 
+            // Update particle properties
             p.particle.x += p.velocityX * dt;
             p.particle.y += p.velocityY * dt;
-            p.particle.rotation += p.rotationSpeed * dt;
+            p.particle.rotation += 0.1 * dt;
             p.particle.alpha = lerp(p.startAlpha, p.endAlpha, t);
             p.particle.scaleX = p.particle.scaleY = lerp(p.startScale, p.endScale, t);
             p.particle.tint = lerpColorSafe(p.startColor, p.endColor, t);
-            
+
             if (p.age >= p.lifetime) {
                 p.active = false;
                 p.particle.alpha = 0;
@@ -169,7 +188,7 @@ export class ParticleSystem {
         this._container.update();
     }
 
-    /** Remove all particles */
+    /** Clear all particles */
     public clear() {
         for (const p of this._particles) {
             p.active = false;
