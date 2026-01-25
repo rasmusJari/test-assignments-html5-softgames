@@ -6,7 +6,7 @@ export class Actor{
     private readonly _actorName: string;
     private readonly _avatarUrl: string;
     private readonly _alignment: string = "neutral";
-    private _avatarSprite!: Sprite;
+    private _avatarSprite!: Texture;
 
     constructor(name: string, avatarUrl: string, alignment: string) {
         this._actorName = name;
@@ -20,7 +20,7 @@ export class Actor{
         return this._actorName;
     }
     
-    get actorAvatar(): Sprite {
+    get actorAvatar(): Texture {
         return this._avatarSprite;
     }
     
@@ -39,12 +39,13 @@ export class Actor{
         // 3. Create texture directly from bitmap
         const texture = Texture.from(bitmap);
 
-        const sprite = new Sprite(texture);
-        sprite.x = this._alignment === 'left' ? 50 : 600;
-        sprite.y = 500;
-        sprite.width = 128;
-        sprite.height = 128;
+        // const sprite = new Texture(texture);
+        this._avatarSprite = new Texture(texture);
+        // sprite.x = this._alignment === 'left' ? 50 : 600;
+        // sprite.y = 500;
+        // sprite.width = 128;
+        // sprite.height = 128;
 
-        MinimumEngine.getInstance().stage.addChild(sprite);
+        //MinimumEngine.getInstance().stage.addChild(sprite);
     }
 }

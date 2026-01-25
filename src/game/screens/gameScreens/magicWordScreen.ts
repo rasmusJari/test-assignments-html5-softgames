@@ -1,6 +1,6 @@
 import {Screen} from "../screen.ts";
-import {getData} from "../../magicWord/dataManager.ts";
 import {DialogManager} from "../../magicWord/dialogManager.ts";
+import {getData} from "../../magicWord/loadExternalData.ts";
 
 export class MagicWordScreen extends Screen{
 
@@ -14,6 +14,14 @@ export class MagicWordScreen extends Screen{
         })
     }
     
-    
+    public enter() {
+        super.enter();
+        console.log("Entered MagicWordScreen");
+    }
+
+    resize(width: number, height: number) {
+        super.resize(width, height);
+        this._dialogManager.resize(width, height);
+    }
 
 }
