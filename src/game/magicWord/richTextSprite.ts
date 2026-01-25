@@ -25,6 +25,8 @@ export class RichTextSprite extends Container {
         const textStyle = new TextStyle({
             fontSize: 24,
             fill: 0xffffff,
+            wordWrap: true,
+            wordWrapWidth: 400,
             ...this._style
         }); 
             
@@ -53,11 +55,13 @@ export class RichTextSprite extends Container {
         let displayText = '';
         const emojiPositions: { emoji: string; index: number; width: number }[] = [];
 
+        const fontSize = this._textObject.style.fontSize || 24;
+
         while ((match = regex.exec(text)) !== null) {
             const emojiName = match[1];
             const startIndex = match.index;
 
-            // Text before emoji
+            // Add text before emoji
             displayText += text.substring(lastIndex, startIndex);
             lastIndex = regex.lastIndex;
 
@@ -67,22 +71,20 @@ export class RichTextSprite extends Container {
                 continue;
             }
 
-            const fontSize = this._textObject.style.fontSize || 24;
-            const emojiWidth = fontSize; // set emoji width = font size
+            const emojiWidth = fontSize; // safe approximation
 
             // Mark position for sprite
             emojiPositions.push({ emoji: emojiName, index: displayText.length, width: emojiWidth });
 
-            // Add placeholder spaces + 2 trailing spaces
-            const singleChar = new Text(this._placeholderChar, this._textObject.style);
-            const spaceCount = Math.ceil(emojiWidth / singleChar.width) 
+            // Add placeholder characters (2 trailing spaces)
+            const spaceCount = Math.max(Math.ceil(emojiWidth / fontSize), 1) + 2; // always at least 1
             displayText += this._placeholderChar.repeat(spaceCount);
         }
 
         // Add remaining text
         displayText += text.substring(lastIndex);
 
-        // Update text object
+        // Update the text object
         this._textObject.text = displayText;
 
         // Position emoji sprites
@@ -93,19 +95,31 @@ export class RichTextSprite extends Container {
             const sprite = new Sprite(texture);
             sprite.anchor.set(0, 0.5);
             sprite.width = pos.width;
-            sprite.height = this._textObject.style.fontSize || 24;
+            sprite.height = fontSize;
 
-            // Measure width of text up to emoji position
-            const substring = displayText.substring(0, pos.index);
-            const measure = new Text(substring, this._textObject.style);
-
-            sprite.x = this._textObject.x + measure.width;
-            sprite.y = this._textObject.y + (this._textObject.style.fontSize || 24) / 2;
+            // Use temporary Text to measure width up to emoji
+            const metrics = new Text(displayText.substring(0, pos.index), { ...this._textObject.style, wordWrap: false });
+            sprite.x = this._textObject.x + metrics.width;
+            sprite.y = this._textObject.y + fontSize / 2;
+            metrics.destroy();
 
             this.addChild(sprite);
             this._emojiSprites.push(sprite);
         });
     }
+
+    // private updateEmojiPositions() {
+    //     const fontSize = this._textObject.style.fontSize || 24;
+    //
+    //     this._emojiSprites.forEach(info => {
+    //         // Measure width of text up to the emoji index
+    //         const substring = this._textObject.text.substring(0, info.index);
+    //         const tempText = new Text(substring, { ...this._textObject.style, wordWrap: false });
+    //         info.sprite.x = this._textObject.x + tempText.width;
+    //         info.sprite.y = this._textObject.y + fontSize / 2;
+    //         tempText.destroy();
+    //     });
+    // }
 
     /**
      * Update text style dynamically.
@@ -114,4 +128,17 @@ export class RichTextSprite extends Container {
         this._style = { ...this._style, ...style };
         this._textObject.style = new TextStyle(this._style);
     }
+    
+    public resize(width: number, height: number): void {
+        // Handle resizing if necessary
+        this._textObject.style.wordWrapWidth = width * 0.6;
+    }
+    
+    
+}
+
+interface EmojiInfo {
+    emoji: string;
+    index: number; // character index in the text
+    sprite: Sprite;
 }

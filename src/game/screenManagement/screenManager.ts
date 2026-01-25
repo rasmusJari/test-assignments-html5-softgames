@@ -28,11 +28,16 @@ export class ScreenManager {
 
         this._root.addChild(this._currentScreen);
         this._currentScreen.enter();
+        
+        // wait for end of frame to ensure proper sizing
+        await new Promise(requestAnimationFrame);
+        console.log("ScreenManager changeScreen", this._currentScreen);
         this._currentScreen.resize(this._engine.width, this._engine.height);
     }
 
     public resize(): void {
         if (!this._currentScreen) return;
+        console.log("##### ScreenManager resize", this._currentScreen);
         this._currentScreen.resize(this._engine.width, this._engine.height);
     }
 

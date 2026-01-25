@@ -8,6 +8,8 @@ export class Dialog extends Container {
     private _avatar: Actor;
     private _text: string;
 
+    private _textPaddingLeft: number = 10;
+    private _textPaddingTop: number = 10;
     private _textBoxX: number = 100;
     private _textBoxY: number = 400;
     private _textBoxWidth: number = 600;
@@ -56,14 +58,13 @@ export class Dialog extends Container {
         this.addChild(this._avatarSprite);
         
         const text = new Text({text: this._richText});
-        text.x = this._textBoxX + 10;
-        text.y = this._textBoxY + 10;
+
         console.log(text);
         this.addChild(text);
         
         this._richText = new RichTextSprite(this._dialogManager.getEmojis(), { fontSize: 24, fill: 0xffffff });
-        this._richText.x = this._textBoxX;
-        this._richText.y = this._textBoxY;
+        this._richText.x = this._textBoxX + this._textPaddingLeft;
+        this._richText.y = this._textBoxY + this._textPaddingTop;
         this._richText.setText(this._text);
         this.addChild(this._richText);
         // // draw multi line text:
@@ -81,7 +82,6 @@ export class Dialog extends Container {
         //
         //     yOffset += lineHeight * 1.2; // line spacing
         // });
-        
     }
 
     // private wrapText(text: string, maxWidth: number, richText: RichTextSprite): string[] {
@@ -115,12 +115,14 @@ export class Dialog extends Container {
         this._textBoxY = 400;
         this._textBoxWidth = width * 0.8;
         this._textBoxHeight = 150;
-        this._richText.x = this._textBoxX;
-        this._richText.y = this._textBoxY;
+        this._richText.x = this._textBoxX + this._textPaddingLeft;
+        this._richText.y = this._textBoxY + this._textPaddingTop;
 
         this._rectangle.x = this._textBoxX;
         this._rectangle.y = this._textBoxY;
         this._rectangle.width = this._textBoxWidth;
         this._rectangle.height = this._textBoxHeight;
+        
+        this._richText.resize(width, height);
     }
 }

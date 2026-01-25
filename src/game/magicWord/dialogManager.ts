@@ -53,6 +53,8 @@ export class DialogManager extends Container{
         nextDialog.draw();
         MinimumEngine.getInstance().stage.addChild(nextDialog);
         this._activeDialog = nextDialog;
+        
+        this.resize(MinimumEngine.getInstance().width, MinimumEngine.getInstance().height);
     }
 
     public getEmojis(): Record<string, Texture> {
