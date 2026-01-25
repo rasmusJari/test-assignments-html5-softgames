@@ -62,7 +62,15 @@ export class Dialog extends Container {
         console.log(text);
         this.addChild(text);
         
-        this._richText = new RichTextSprite(this._dialogManager.getEmojis(), { fontSize: 24, fill: 0xffffff });
+        // this._richText = new RichTextSprite(this._dialogManager.getEmojis(), { fontSize: 24, fill: 0xffffff });
+        this._richText = new RichTextSprite(
+            { fontSize: 24, fill: 0xffffff , wordWrap: true, wordWrapWidth: this._textBoxWidth },
+            this._dialogManager.getEmojis(), this._textBoxWidth * 0.8
+        )
+        // this._richText = new RichTextSprite(
+        //     { fontSize: 24, fill: 0xffffff , wordWrap: true, wordWrapWidth: this._textBoxWidth },
+        //     { emojiMap: this._dialogManager.getEmojis(), placeholderChar: '_' }
+        // );
         this._richText.x = this._textBoxX + this._textPaddingLeft;
         this._richText.y = this._textBoxY + this._textPaddingTop;
         this._richText.setText(this._text);
@@ -123,6 +131,7 @@ export class Dialog extends Container {
         this._rectangle.width = this._textBoxWidth;
         this._rectangle.height = this._textBoxHeight;
         
-        this._richText.resize(width, height);
+        // this._richText.resize(width, height);
+        this._richText.refresh(this._textBoxWidth * 0.8);
     }
 }
