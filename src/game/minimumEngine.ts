@@ -13,6 +13,7 @@ export class MinimumEngine {
         MinimumEngine.instance = this;
         console.log('MinimumEngine initialized');
         this.app = app;
+        
         // Root container that screens draw into
         this.stage = new Container();
         this.ticker = new Ticker();
@@ -29,6 +30,9 @@ export class MinimumEngine {
         this.ticker.add((delta) => {
             fpsText.text = `FPS: ${this.ticker.FPS.toFixed(2)}`;
         });
+
+        this.ticker.maxFPS = 60;
+      //  app.ticker.maxFPS = this.ticker.maxFPS;
     }
 
     public resize(): void {

@@ -57,7 +57,8 @@ export class AceOfShadow{
     }
     
     private update(ticker: Ticker){
-        this._timer += ticker.deltaMS;
+        const dt = 1000 / 60; // assuming 60 FPS
+        this._timer += dt;
         if(this._timer >= this._cardTransferInterval){
             this.transferCard();
             this._timer = 0;

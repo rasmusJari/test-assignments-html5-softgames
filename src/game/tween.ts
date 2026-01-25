@@ -1,9 +1,11 @@
 import { Ticker } from 'pixi.js';
+import {MinimumEngine} from "./minimumEngine.ts";
 
 /** Optional easing functions */
 export type EasingFunction = (t: number) => number;
 
 export class Tween {
+    private _targetFps: number = MinimumEngine.getInstance().ticker.maxFPS;
     private _target: any;
     private _from: { [key: string]: number } = {};
     private _to: { [key: string]: number } = {};
@@ -51,7 +53,7 @@ export class Tween {
     }
 
     private _update(ticker: Ticker): void {
-        this._elapsed += ticker.deltaTime / Ticker.shared.FPS; // approximate seconds
+        this._elapsed += ticker.deltaTime / this._targetFps; // approximate seconds
         const tRaw = Math.min(this._elapsed / this._duration, 1);
         const t = this._easing(tRaw);
 
