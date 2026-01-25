@@ -11,6 +11,7 @@ export class AceOfShadow{
     private _spriteCard!: Sprite;
     private _timer: number = 0;
     private _cardTransferInterval: number = 1000; // milliseconds
+    private readonly _numberOfCards: number = 144;
     
     private _width: number = engine().width;
     private _height: number = engine().height;
@@ -41,7 +42,7 @@ export class AceOfShadow{
 
         const x = this._width / 2 + 125 + this.iteration * 0.2;
         let y = this._height / 2 - this.iteration * 1;
-        for(let i = 0; i < 50; i++){
+        for(let i = 0; i < this._numberOfCards; i++){
             const sprite = new Sprite(Assets.get('/ui/cardBack_green4.png'));
             sprite.x = x;
             sprite.y = y;

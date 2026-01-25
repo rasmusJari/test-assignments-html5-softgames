@@ -10,7 +10,7 @@ export class PhoenixFlame extends Screen {
     private _particleSystem!: ParticleSystem;
     private _texture!: Texture;
     private _particleAssetPath: string = '/particles/flame_04.png';
-    private _particleCountText: Text = new Text('');
+    private _particleCountText: Text = null as any;
     private _emitterX: number = engine().app.screen.width /2;
     private _emitterY: number = engine().app.screen.height /2;
 
@@ -45,7 +45,7 @@ export class PhoenixFlame extends Screen {
             
             startColor: 0xff4500,
             endColor: 0xffff00,
-            lifetime: 1.2,
+            lifetime: 1.5,
             startAlpha: 1,
             endAlpha: 0,
             startScale: 0.3,
@@ -54,12 +54,6 @@ export class PhoenixFlame extends Screen {
 
         this._particleSystem.setEmitterPosition(this._emitterX, this._emitterY);
         this._particleSystem.setEmitterRate(0.08);
-
-        this._root!.interactive = true;
-        this._root!.on('pointermove', (event) => {
-            const { x, y } = event.global;
-            this._particleSystem.setEmitterPosition(x, y);
-        });
     }
 
     public exit(): void {
