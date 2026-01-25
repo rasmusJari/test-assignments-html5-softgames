@@ -1,4 +1,4 @@
-import {Actor} from "./actor.ts";
+import {Actor, ActorAlignment} from "./actor.ts";
 import {MinimumEngine} from "../minimumEngine.ts";
 import {Container, Texture, Sprite, Text} from "pixi.js";
 import {RichTextSprite} from "./richTextSprite.ts";
@@ -53,7 +53,12 @@ export class Dialog extends Container {
         this.addChild(this._rectangle);
         // draw avatar:
         this._avatarSprite = new Sprite(this._avatar.actorAvatar);
-        this._avatarSprite.x = this._textBoxX;
+        if(this._avatar.alignment == ActorAlignment.LEFT){
+            this._avatarSprite.x = this._textBoxX;
+        } else {
+            this._avatarSprite.x = this._textBoxX + this._textBoxWidth - this._avatarSprite.width;
+        }
+        
         this._avatarSprite.y = this._textBoxY + this._textBoxHeight;
         this.addChild(this._avatarSprite);
         
@@ -117,7 +122,11 @@ export class Dialog extends Container {
     // }
     
     public resize(width: number, height: number): void {
-        this._avatarSprite.x = this._textBoxX;
+        if(this._avatar.alignment == ActorAlignment.LEFT){
+            this._avatarSprite.x = this._textBoxX;
+        } else {
+            this._avatarSprite.x = this._textBoxX + this._textBoxWidth - this._avatarSprite.width;
+        }
         this._avatarSprite.y = this._textBoxY + this._textBoxHeight;
         this._textBoxX = width * 0.1;
         this._textBoxY = 400;

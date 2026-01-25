@@ -5,13 +5,14 @@ import {MinimumEngine} from "../minimumEngine.ts";
 export class Actor{
     private readonly _actorName: string;
     private readonly _avatarUrl: string;
-    private readonly _alignment: string = "neutral";
+    // private readonly _alignment: string = "neutral";
+    private _alignment: ActorAlignment;
     private _avatarSprite!: Texture;
 
     constructor(name: string, avatarUrl: string, alignment: string) {
         this._actorName = name;
         this._avatarUrl = avatarUrl;
-        this._alignment = alignment;
+        this._alignment = alignment as ActorAlignment;
         
         this.loadAvatar();
     }
@@ -24,7 +25,7 @@ export class Actor{
         return this._avatarSprite;
     }
     
-    get alignment(): string {
+    get alignment(): ActorAlignment {
         return this._alignment;
     }
 
@@ -48,4 +49,10 @@ export class Actor{
 
         //MinimumEngine.getInstance().stage.addChild(sprite);
     }
+}
+
+export enum ActorAlignment {
+    LEFT = "left",
+    RIGHT = "right",
+    NEUTRAL = "neutral"
 }
