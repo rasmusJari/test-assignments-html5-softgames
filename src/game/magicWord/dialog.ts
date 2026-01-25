@@ -56,7 +56,7 @@ export class Dialog extends Container {
         } else {
             this._avatarSprite.x = this._textBoxX + this._textBoxWidth - this._avatarSprite.width;
         }
-        
+
         this._avatarSprite.y = this._textBoxY + this._textBoxHeight;
         this.addChild(this._avatarSprite);
         
@@ -77,16 +77,19 @@ export class Dialog extends Container {
     }
 
     public resize(width: number, height: number): void {
-        if(this._avatar.alignment == ActorAlignment.LEFT){
-            this._avatarSprite.x = this._textBoxX - this._avatarSprite.width * 0.5;
-        } else {
-            this._avatarSprite.x = this._textBoxX + this._textBoxWidth - this._avatarSprite.width;
-        }
-        this._avatarSprite.y = this._textBoxY + this._textBoxHeight - 20;
+
         this._textBoxX = width * 0.1;
         this._textBoxY = height - 200;
         this._textBoxWidth = width * 0.8;
         this._textBoxHeight = 150;
+        
+        if(this._avatar.alignment == ActorAlignment.LEFT){
+            this._avatarSprite.x = this._textBoxX;
+        } else {
+            this._avatarSprite.x = this._textBoxX + this._textBoxWidth - this._avatarSprite.width;
+        }
+        this._avatarSprite.y = this._textBoxY - this._textBoxHeight + 22;
+        
         this._richText.x = this._textBoxX + this._textPaddingLeft;
         this._richText.y = this._textBoxY + this._textPaddingTop;
 
