@@ -30,6 +30,7 @@ export class Actor{
     }
 
     private async loadAvatar(): Promise<void> {
+        if(this._avatarUrl == '') return;
         // 1. Fetch image
         const response = await fetch(this._avatarUrl);
         const blob = await response.blob();

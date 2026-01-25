@@ -94,7 +94,6 @@ export class DialogManager extends Container{
     }
     
     private async generateAvatars(avatarToken: any) {
-        
         for (const avatar of avatarToken) {
             const name: string = avatar['name'];
             const imageUrl: string = avatar['url'];
@@ -127,11 +126,19 @@ export class DialogManager extends Container{
             const actorName = dToken['name'];
             const text = dToken['text'];
             console.log('Generating dialog for', actorName, ':', text);
-            const actor = Array.from(this._avatars).find(a => a.actorName === actorName);
+            let actor = Array.from(this._avatars).find(a => a.actorName === actorName);
+            
+            // remove undefined actors lines?
             if (!actor) {
                 console.warn(`Actor with name ${actorName} not found for dialog.`);
                 continue;
             }
+            
+            // if(!actor){
+            //     console.warn(`Actor with name ${actorName} not found for dialog. Skipping this dialog.`);
+            //     actor = new Actor(actorName, '', "neutral");
+            // }
+            
             this._dialogs.add(new Dialog(actor, text, this));
         }
     }

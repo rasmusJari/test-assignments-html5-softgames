@@ -31,7 +31,7 @@ export class Dialog extends Container {
         // Remove all children from this container
         this.removeChildren();
 
-        // Optional: destroy children to free textures and memory
+        // Destroy children to free textures and memory
         // @ts-ignore
         this.destroy({ children: true, texture: false, baseTexture: false });
     }
@@ -49,6 +49,7 @@ export class Dialog extends Container {
         this.addChild(this._rectangle);
         
         // draw avatar:
+        console.log("Drawing avatar for dialog:", this._avatar.actorName);
         this._avatarSprite = new Sprite(this._avatar.actorAvatar);
         if(this._avatar.alignment == ActorAlignment.LEFT){
             this._avatarSprite.x = this._textBoxX;
@@ -73,7 +74,6 @@ export class Dialog extends Container {
         this._richText.y = this._textBoxY + this._textPaddingTop;
         this._richText.setText(this._text);
         this.addChild(this._richText);
-
     }
 
     public resize(width: number, height: number): void {
