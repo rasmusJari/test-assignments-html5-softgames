@@ -40,7 +40,7 @@ export class Dialog extends Container {
     public draw(): void {
         // box:
         this._rectangle = new Sprite(Texture.WHITE);
-        this._rectangle.tint = 0xFF0000;
+        this._rectangle.tint = 0x395366;
         this._rectangle.alpha = 1;
         this._rectangle.width = this._textBoxWidth;   
         this._rectangle.height = this._textBoxHeight;
