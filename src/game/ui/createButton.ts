@@ -1,9 +1,10 @@
-import {Button, FancyButton} from "@pixi/ui";
+import {FancyButton} from "@pixi/ui";
 import {Sprite} from "pixi.js";
 
 export function createFancyButton(text: string, defaultSprite: Sprite, hoverSprite: Sprite, pressSprite: Sprite, animation: any , onPress: () => void) : FancyButton {
     const button = new FancyButton({
         text,
+        padding: 10,
         defaultView: defaultSprite,
         hoverView: hoverSprite,
         pressedView: pressSprite,
