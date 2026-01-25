@@ -72,6 +72,7 @@ export class MainScreen extends Screen {
                 engine().screenManager.changeScreen(new AceOfShadowScreen());
             }
         );
+        this._button_aos.anchor.set(0.5);
         this.addChild(this._button_aos);
 
 
@@ -87,6 +88,7 @@ export class MainScreen extends Screen {
             }
         );
 
+        this._button_mwo.anchor.set(0.5);
         this.addChild(this._button_mwo);
 
 
@@ -101,6 +103,7 @@ export class MainScreen extends Screen {
                 engine().screenManager.changeScreen(new PhoenixFlame());
             }
         );
+        this._button_pf.anchor.set(0.5);
         this.addChild(this._button_pf);
     }
 
@@ -127,17 +130,17 @@ export class MainScreen extends Screen {
         );
         
         this._button_aos.position.set(
-            width * 0.5 - (this._buttonWidth / 2),
+            width * 0.5,
             height * 0.6
         );
         
         this._button_mwo.position.set(
-            width * 0.5 - (this._buttonWidth / 2),
+            width * 0.5,
             height * 0.7
         );
 
         this._button_pf.position.set(
-            width * 0.5 - (this._buttonWidth / 2),
+            width * 0.5,
             height * 0.8
         );
     }
