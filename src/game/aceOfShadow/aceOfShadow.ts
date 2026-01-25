@@ -133,7 +133,7 @@ export class AceOfShadow{
         let indexA = 0;
         for(const card of this._stackA){
             card.x = xA + indexA * 0.2;
-            card.y = yA - indexA * 1;
+            card.y = yA - indexA;
             indexA++;
         }
         

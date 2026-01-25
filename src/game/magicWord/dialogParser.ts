@@ -36,9 +36,7 @@ export class DialogueParser {
      * Parse a single dialogue line
      */
     private static parseLine(raw: RawDialogueLine): DialogueLine {
-        console.log('parsing line:', raw);
         const emotionMatch = raw.text.match(/\{([^}]+)\}/);
-        console.log('parsing line:', raw.name)
         return {
             
             speaker: raw.name,

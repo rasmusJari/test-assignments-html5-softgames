@@ -49,7 +49,6 @@ export class Dialog extends Container {
         this.addChild(this._rectangle);
         
         // draw avatar:
-        console.log("Drawing avatar for dialog:", this._avatar.actorName);
         this._avatarSprite = new Sprite(this._avatar.actorAvatar);
         if(this._avatar.alignment == ActorAlignment.LEFT){
             this._avatarSprite.x = this._textBoxX;
@@ -61,8 +60,7 @@ export class Dialog extends Container {
         this.addChild(this._avatarSprite);
         
         const text = new Text({text: this._richText});
-
-        console.log(text);
+        
         this.addChild(text);
 
         this._richText = new RichTextSprite(

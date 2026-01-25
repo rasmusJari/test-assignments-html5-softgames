@@ -123,7 +123,6 @@ export class MainScreen extends Screen {
     }
     
     public resize(width: number, height: number): void {
-        console.log('MainScreen resize');
         this._label?.position.set(
             width * 0.5,
             height * 0.5

@@ -72,22 +72,16 @@ export class DialogManager extends Container{
         } else {
             jsonData = data;
         }
-
-        console.log("Dialog data set:", jsonData);
         
         const avatarsToken = jsonData['avatars'];
-        console.log(avatarsToken);
         if (avatarsToken) {
             await this.generateAvatars(avatarsToken);
         }
         
         const emojisToken = jsonData['emojies'];
-        console.log(emojisToken);
-        
         await this.generateEmojis(emojisToken);
 
         const dialogsToken = jsonData['dialogue'];
-        console.log(dialogsToken);
         await this.generateDialogs(dialogsToken);
         
         this.initialize();
@@ -98,10 +92,8 @@ export class DialogManager extends Container{
             const name: string = avatar['name'];
             const imageUrl: string = avatar['url'];
             const alignment: string = avatar['position'];
-            console.log(name);
             const actor = new Actor(name, imageUrl, alignment);
             this._avatars.add(actor);
-            console.log(actor);
         }
     }
     
@@ -115,9 +107,9 @@ export class DialogManager extends Container{
             this._emojis[id] = Texture.from(bitmap);
         }
         
-        for (const key in this._emojis) {
-            console.log('Loaded emoji:', key);
-        }
+        // for (const key in this._emojis) {
+        //     console.log('Loaded emoji:', key);
+        // }
     }
 
     
@@ -125,7 +117,6 @@ export class DialogManager extends Container{
         for (const dToken of dialogToken) {
             const actorName = dToken['name'];
             const text = dToken['text'];
-            console.log('Generating dialog for', actorName, ':', text);
             let actor = Array.from(this._avatars).find(a => a.actorName === actorName);
             
             // remove undefined actors lines?

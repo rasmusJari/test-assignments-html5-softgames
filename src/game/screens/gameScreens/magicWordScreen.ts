@@ -9,7 +9,6 @@ export class MagicWordScreen extends Screen{
     constructor() {
         super();
         getData('https://private-624120-softgamesassignment.apiary-mock.com/v2/magicwords').then(data => {
-            console.log('MagicWord data loaded:', data);
             this._dialogManager.setData(data);
         })
     }

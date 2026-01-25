@@ -37,7 +37,6 @@ export class ScreenManager {
 
     public resize(): void {
         if (!this._currentScreen) return;
-        console.log("##### ScreenManager resize", this._currentScreen);
         this._currentScreen.resize(this._engine.width, this._engine.height);
     }
 
