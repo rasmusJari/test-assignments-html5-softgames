@@ -5,6 +5,7 @@ import {createFancyButton} from "../ui/createButton.ts";
 import {AceOfShadowScreen} from "./gameScreens/aceOfShadowScreen.ts";
 import {engine, MinimumEngine} from "../minimumEngine.ts";
 import {PhoenixFlame} from "./gameScreens/phoenixFlame.ts";
+import {MagicWordScreen} from "./gameScreens/magicWordScreen.ts";
 
 export class MainScreen extends Screen {
     private _label!: Text;
@@ -82,6 +83,7 @@ export class MainScreen extends Screen {
             buttonAnimations,
             () => {
                 console.log('Magic Words button pressed');
+                engine().screenManager.changeScreen(new MagicWordScreen());
             }
         );
 
