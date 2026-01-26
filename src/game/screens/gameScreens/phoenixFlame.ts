@@ -1,8 +1,10 @@
 import { Screen } from '../screen.ts';
-import { ParticleContainer, Texture, Ticker, Text, Assets } from 'pixi.js';
+import {ParticleContainer, Texture, Ticker, Text, Assets, Sprite} from 'pixi.js';
 import { engine } from '../../minimumEngine.ts';
 import { randomRange } from '../../../engine/utils/random.ts';
 import {ParticleSystem} from "../../phoenixFlame/particleSystem.ts";
+import {sound} from "@pixi/sound";
+import {Asset} from "@assetpack/core";
 
 
 export class PhoenixFlame extends Screen {
@@ -13,10 +15,12 @@ export class PhoenixFlame extends Screen {
     private _particleCountText: Text = null as any;
     private _emitterX: number = engine().app.screen.width /2;
     private _emitterY: number = engine().app.screen.height /2;
+    private _torchSprite: Sprite = null as any;
 
     public async init(): Promise<void> {
         engine().app.renderer.background.color = 0x000000;
         await Assets.load(this._particleAssetPath);
+        await Assets.load('/art/torch.png')
 
         this._particleCountText = new Text({
             text: 'Particles: 0',
@@ -27,6 +31,13 @@ export class PhoenixFlame extends Screen {
     }
 
     public enter(): void {
+        sound.add('music', '/sfx/taleOfFire.mp3');
+        sound.play('music', { loop: true, volume: 0.1 });
+        this._torchSprite = new Sprite(Assets.get('/art/torch.png'));
+        this._torchSprite.anchor.set(0.5, 0);
+        this._torchSprite.position.set(this._emitterX, this._emitterY + 50);
+        this._root?.addChild(this._torchSprite);
+        
         this._texture = Texture.from(this._particleAssetPath);
 
         this._particleContainer = new ParticleContainer({
@@ -58,6 +69,8 @@ export class PhoenixFlame extends Screen {
 
     public exit(): void {
         this._particleSystem.clear();
+        sound.stop('music');
+        sound.remove('music');
     }
 
     public update(ticker: Ticker): void {
