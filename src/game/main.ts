@@ -1,6 +1,7 @@
 import { Application } from 'pixi.js';
 import { MinimumEngine, setEngine } from "./minimumEngine.ts";
 import { MainScreen } from "./screens/mainScreen.ts";
+import {ReloadButton} from "./reloadButton.ts";
 
 const app = new Application();
 
@@ -18,6 +19,14 @@ setEngine(engine);
 
 
 const canvas = app.canvas;
+
+const reloadButton = new ReloadButton(() => {
+    window.location.reload();
+});
+
+reloadButton.position.set(window.innerWidth - reloadButton.width, 10);
+app.stage.addChild(reloadButton);
+
 
 /** ---------- FULLSCREEN HELPERS ---------- */
 
