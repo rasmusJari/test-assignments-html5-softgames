@@ -1,11 +1,11 @@
 import {engine} from "../minimumEngine.ts";
-import {Assets, Sprite, Ticker} from "pixi.js";
+import {Assets, Container, Sprite, Ticker} from "pixi.js";
 import {Tween} from "../tween.ts";
 import {Sound} from "@pixi/sound";
 import {Easing} from "../easing.ts";
 
-export class AceOfShadow{
-    
+export class AceOfShadow extends Container {
+    private _screen!: Container;
     private _stackA: Set<Sprite>;
     private _stackB: Set<Sprite>;
     private _spriteCard!: Sprite;
@@ -19,22 +19,25 @@ export class AceOfShadow{
     private _sfxCardPlace!: Sound;
     
     constructor(){
+        super();
         this._stackA = new Set<Sprite>();
         this._stackB = new Set<Sprite>();
     }
     
-    public async init(): Promise<void> {
-        
+    public async init(screen: Container): Promise<void> {
+        this._screen = screen;
         engine().ticker.add( (ticker) => {
             this.update(ticker);
         });
 
         await Assets.load('/ui/cardBack_green4.png');
         this._sfxCardSlide = Sound.from('/sfx/cardSlide7.wav');
-        this._sfxCardSlide.volume = 0.3;
+        this._sfxCardSlide.volume = 0.1;
         
         this._sfxCardPlace = Sound.from('/sfx/cardSlide8.wav');
-        this._sfxCardPlace.volume = 0.3;
+        this._sfxCardPlace.volume = 0.1;
+
+        this._screen.addChild(this);
     }
     
     public start(): void {
@@ -47,7 +50,7 @@ export class AceOfShadow{
             sprite.x = x;
             sprite.y = y;
             sprite.zIndex = -sprite.y; // for proper layering
-            engine().stage.addChild(sprite);
+            this.addChild(sprite);
             this._stackA.add(sprite);
         }
 
@@ -57,6 +60,7 @@ export class AceOfShadow{
     }
     
     private update(ticker: Ticker){
+        console.log("AceOfShadow update");
         const dt = 1000 / 60; // assuming 60 FPS
         this._timer += dt;
         if(this._timer >= this._cardTransferInterval){
@@ -64,7 +68,20 @@ export class AceOfShadow{
             this._timer = 0;
         }
     }
-    
+
+    public exit(): void {
+        engine().ticker.remove(this.update);
+
+        this._stackA.forEach((card) => {
+            card.destroy();
+        });
+        this._stackB.forEach((card) => {
+            card.destroy();
+        });
+        this.removeChildren();
+        engine().stage.removeChild(this);
+    }
+
     private iteration: number = 0;
     private async transferCard(){
         if(this._stackA.size === 0) return;

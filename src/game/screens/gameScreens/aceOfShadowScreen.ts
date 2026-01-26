@@ -1,6 +1,8 @@
 import {Screen} from "../screen.ts";
 import {AceOfShadow} from "../../aceOfShadow/aceOfShadow.ts";
-import {engine} from "../../../app/getEngine.ts";
+
+class MainMenuScreen extends Screen {
+}
 
 export class AceOfShadowScreen extends Screen{
     private _aceOfShadow!: AceOfShadow;
@@ -14,12 +16,16 @@ export class AceOfShadowScreen extends Screen{
         console.log("AceOfShadowScreen initialized");
         
         this._aceOfShadow = new AceOfShadow();
-        await this._aceOfShadow.init();
+        await this._aceOfShadow.init(this);
     }
     
     override async enter(): Promise<void> {
         console.log("AceOfShadowScreen started");
         this._aceOfShadow.start();
+    }
+
+    exit() {
+        this._aceOfShadow.exit();
     }
 
     resize(width: number, height: number) {
