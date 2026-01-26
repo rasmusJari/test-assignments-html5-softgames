@@ -71,6 +71,7 @@ export class PhoenixFlame extends Screen {
     public resize(width: number, height: number): void {
         this._emitterX = width / 2;
         this._emitterY = height / 2;
+        if(this._particleSystem === undefined) return;
         this._particleSystem.setEmitterPosition(this._emitterX, this._emitterY);
     }
 }
