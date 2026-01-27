@@ -140,6 +140,7 @@ export class AceOfShadow extends Container {
     
     public resize(width: number, height: number): void {
         // Handle resize if necessary
+        this.scale.set(0.6, 0.6);
         this._width = width;
         this._height = height;
         

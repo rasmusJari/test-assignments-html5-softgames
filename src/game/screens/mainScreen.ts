@@ -7,6 +7,7 @@ import {engine, MinimumEngine} from "../minimumEngine.ts";
 import {PhoenixFlame} from "./gameScreens/phoenixFlame.ts";
 import {MagicWordScreen} from "./gameScreens/magicWordScreen.ts";
 import {createFancyButton} from "../ui/createButton.ts";
+import {scaleCanvas} from "../canvasScaler.ts";
 
 export class MainScreen extends Screen {
     private DESIGN_WIDTH = 800;
@@ -134,17 +135,7 @@ export class MainScreen extends Screen {
     
     public resize(width: number, height: number): void {
 
-        const scaleX = width / this.DESIGN_WIDTH;
-        const scaleY = height / this.DESIGN_HEIGHT;
-
-        // Keep aspect ratio
-        const scale = Math.min(scaleX, scaleY);
-
-        this.scale.set(scale);
-
-        // Center it
-        this.x = (width - this.DESIGN_WIDTH * scale) / 2;
-        this.y = (height - this.DESIGN_HEIGHT * scale) / 2;
+        scaleCanvas(width, height, this);
         
         this._menu.position.set(
             this.DESIGN_WIDTH / 2,
