@@ -9,6 +9,8 @@ import {MagicWordScreen} from "./gameScreens/magicWordScreen.ts";
 import {createFancyButton} from "../ui/createButton.ts";
 
 export class MainScreen extends Screen {
+    private DESIGN_WIDTH = 800;
+    private DESIGN_HEIGHT = 600;
     private readonly BUTTON_FLAT_TEXTURE_PATH = './ui/button_rectangle_depth_flat.png';
     private readonly BUTTON_LINE_TEXTURE_PATH = './ui/button_rectangle_depth_line.png';
     private _label!: Text;
@@ -16,6 +18,7 @@ export class MainScreen extends Screen {
     private _button_mwo!: FancyButton;
     private _button_pf!: FancyButton;
     private pauseButton!: FancyButton;
+    private _menu!: Container;
     
     private _buttonWidth = 192;
     constructor() {
@@ -28,6 +31,8 @@ export class MainScreen extends Screen {
         
         await Assets.load(this.BUTTON_FLAT_TEXTURE_PATH);
         await Assets.load(this.BUTTON_LINE_TEXTURE_PATH);
+        
+        this._menu = new Container();
 
         //   this.resize(window.innerWidth, window.innerHeight);
         MinimumEngine.getInstance().app.renderer.background.color = 0x1099bb;
@@ -39,7 +44,7 @@ export class MainScreen extends Screen {
             }
         });
         this._label.anchor.set(0.5);
-        this.addChild(this._label);
+        this._menu.addChild(this._label);
 
         const buttonAnimations = {
             hover: {
@@ -76,7 +81,7 @@ export class MainScreen extends Screen {
             }
         );
         this._button_aos.anchor.set(0.5);
-        this.addChild(this._button_aos);
+        this._menu.addChild(this._button_aos);
 
 
         this._button_mwo = createFancyButton(
@@ -92,7 +97,7 @@ export class MainScreen extends Screen {
         );
 
         this._button_mwo.anchor.set(0.5);
-        this.addChild(this._button_mwo);
+        this._menu.addChild(this._button_mwo);
 
 
         this._button_pf = createFancyButton(
@@ -107,7 +112,9 @@ export class MainScreen extends Screen {
             }
         );
         this._button_pf.anchor.set(0.5);
-        this.addChild(this._button_pf);
+        this._menu.addChild(this._button_pf);
+        
+        this.addChild(this._menu);
     }
 
     public override enter(): void {
@@ -126,24 +133,43 @@ export class MainScreen extends Screen {
     }
     
     public resize(width: number, height: number): void {
+
+        const scaleX = width / this.DESIGN_WIDTH;
+        const scaleY = height / this.DESIGN_HEIGHT;
+
+        // Keep aspect ratio
+        const scale = Math.min(scaleX, scaleY);
+
+        this.scale.set(scale);
+
+        // Center it
+        this.x = (width - this.DESIGN_WIDTH * scale) / 2;
+        this.y = (height - this.DESIGN_HEIGHT * scale) / 2;
+        
+        this._menu.position.set(
+            this.DESIGN_WIDTH / 2,
+            this.DESIGN_HEIGHT / 2
+        );
+        
         this._label?.position.set(
-            width * 0.5,
-            height * 0.5
+            0,
+            - this.DESIGN_HEIGHT * 0.3
         );
-        
+
+
         this._button_aos.position.set(
-            width * 0.5,
-            height * 0.6
+            0,
+            -this.DESIGN_HEIGHT * 0.3 + 100
         );
-        
+
         this._button_mwo.position.set(
-            width * 0.5,
-            height * 0.7
+            0,
+            -this.DESIGN_HEIGHT * 0.3 + 200
         );
 
         this._button_pf.position.set(
-            width * 0.5,
-            height * 0.8
+            0,
+            -this.DESIGN_HEIGHT * 0.3 + 300
         );
     }
 }

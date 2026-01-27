@@ -4,6 +4,7 @@ import { MainScreen } from "./screens/mainScreen.ts";
 import { ReloadButton } from "./reloadButton.ts";
 
 // Wait for the iframe / DOM to fully load
+
 window.addEventListener('load', async () => {
 
     // Create Pixi Application
@@ -56,17 +57,27 @@ window.addEventListener('load', async () => {
         }
     }
 
+
+
     /** ---------- EVENTS ---------- */
     // Resize Pixi properly
     window.addEventListener('resize', () => {
-        engine.resize();
+        engineResize();
     });
+
 
     // Handle fullscreen changes
     document.addEventListener('fullscreenchange', () => {
         console.log(`[Fullscreen] ${isFullscreen() ? 'ENTERED' : 'EXITED'}`);
-        engine.resize();
+        engineResize();
     });
+    
+    function engineResize(){
+        requestAnimationFrame(() =>{
+            engine.resize();
+            reloadButton.position.set(window.innerWidth - reloadButton.width, 10);
+        })
+    }
 
     // Keyboard toggle (fallback)
     window.addEventListener('keydown', (e) => {
@@ -79,14 +90,10 @@ window.addEventListener('load', async () => {
     canvas.addEventListener('click', () => {
         requestFullscreen();
     }, { once: true });
-
-    /** ---------- TICKER ---------- */
-    app.ticker.add(() => {
-        // Game loop
-    });
+    
 
     /** ---------- DEFAULT FULLSCREEN ---------- */
-    requestFullscreen();
+  //  requestFullscreen();
 
     // Show first screen
     engine.screenManager.changeScreen(new MainScreen());
