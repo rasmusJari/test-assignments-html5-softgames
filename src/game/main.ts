@@ -1,93 +1,93 @@
 import { Application } from 'pixi.js';
 import { MinimumEngine, setEngine } from "./minimumEngine.ts";
 import { MainScreen } from "./screens/mainScreen.ts";
-import {ReloadButton} from "./reloadButton.ts";
+import { ReloadButton } from "./reloadButton.ts";
 
-const app = new Application();
+// Wait for the iframe / DOM to fully load
+window.addEventListener('load', async () => {
 
-await app.init({
-    resizeTo: window,
-    backgroundColor: 0xFFFFFF,
-    preference: 'webgl'
-});
+    // Create Pixi Application
+    const app = new Application();
 
-document.getElementById('app')!.appendChild(app.canvas);
+    // Initialize Pixi safely after DOM is ready
+    await app.init({
+        resizeTo: window,
+        backgroundColor: 0xFFFFFF,
+        preference: 'webgl'
+    });
 
-const engine = new MinimumEngine(app);
-setEngine(engine);
+    // Append canvas to #app element
+    document.getElementById('app')!.appendChild(app.canvas);
 
+    // Setup engine
+    const engine = new MinimumEngine(app);
+    setEngine(engine);
 
+    const canvas = app.canvas;
 
-const canvas = app.canvas;
+    // Add reload button
+    const reloadButton = new ReloadButton(() => {
+        window.location.reload();
+    });
+    reloadButton.position.set(window.innerWidth - reloadButton.width, 10);
+    app.stage.addChild(reloadButton);
 
-const reloadButton = new ReloadButton(() => {
-    window.location.reload();
-});
+    /** ---------- FULLSCREEN HELPERS ---------- */
+    function isFullscreen(): boolean {
+        return document.fullscreenElement === canvas;
+    }
 
-reloadButton.position.set(window.innerWidth - reloadButton.width, 10);
-app.stage.addChild(reloadButton);
-
-
-/** ---------- FULLSCREEN HELPERS ---------- */
-
-function isFullscreen(): boolean {
-    return document.fullscreenElement === canvas;
-}
-
-async function requestFullscreen() {
-    if (!document.fullscreenElement) {
-        try {
-            await canvas.requestFullscreen();
-            console.log('[Fullscreen] Entered');
-        } catch {
-            console.warn('[Fullscreen] Blocked by browser (user gesture required)');
+    async function requestFullscreen() {
+        if (!document.fullscreenElement) {
+            try {
+                await canvas.requestFullscreen();
+                console.log('[Fullscreen] Entered');
+            } catch {
+                console.warn('[Fullscreen] Blocked by browser (user gesture required)');
+            }
         }
     }
-}
 
-async function toggleFullscreen() {
-    if (isFullscreen()) {
-        await document.exitFullscreen();
-    } else {
-        await requestFullscreen();
+    async function toggleFullscreen() {
+        if (isFullscreen()) {
+            await document.exitFullscreen();
+        } else {
+            await requestFullscreen();
+        }
     }
-}
 
-/** ---------- EVENTS ---------- */
+    /** ---------- EVENTS ---------- */
+    // Resize Pixi properly
+    window.addEventListener('resize', () => {
+        engine.resize();
+    });
 
-// Resize Pixi properly
-window.addEventListener('resize', () => {
-    engine.resize();
-});
+    // Handle fullscreen changes
+    document.addEventListener('fullscreenchange', () => {
+        console.log(`[Fullscreen] ${isFullscreen() ? 'ENTERED' : 'EXITED'}`);
+        engine.resize();
+    });
 
-// Handle fullscreen changes
-document.addEventListener('fullscreenchange', () => {
-    console.log(`[Fullscreen] ${isFullscreen() ? 'ENTERED' : 'EXITED'}`);
-    engine.resize();
-});
+    // Keyboard toggle (fallback)
+    window.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() === 'f') {
+            toggleFullscreen();
+        }
+    });
 
-// Keyboard toggle (fallback)
-window.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 'f') {
-        toggleFullscreen();
-    }
-});
+    // Click once to guarantee fullscreen (important!)
+    canvas.addEventListener('click', () => {
+        requestFullscreen();
+    }, { once: true });
 
-// Click once to guarantee fullscreen (important!)
-canvas.addEventListener('click', () => {
+    /** ---------- TICKER ---------- */
+    app.ticker.add(() => {
+        // Game loop
+    });
+
+    /** ---------- DEFAULT FULLSCREEN ---------- */
     requestFullscreen();
-}, { once: true });
 
-/** ---------- TICKER ---------- */
-
-app.ticker.add(() => {
-    // Game loop
+    // Show first screen
+    engine.screenManager.changeScreen(new MainScreen());
 });
-
-/** ---------- DEFAULT FULLSCREEN ---------- */
-
-// Try immediately
-requestFullscreen();
-
-// Show first screen
-engine.screenManager.changeScreen(new MainScreen());

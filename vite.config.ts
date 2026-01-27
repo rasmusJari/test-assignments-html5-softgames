@@ -12,6 +12,9 @@ export default defineConfig({
   define: {
     APP_VERSION: JSON.stringify(process.env.npm_package_version),
   },
-  base: './',
-  build: { target: 'esnext', sourcemap: false }
+  base: './', // important for relative paths on GitHub Pages
+  build: {
+    outDir: 'dist',
+    target: 'esnext'
+  }
 });

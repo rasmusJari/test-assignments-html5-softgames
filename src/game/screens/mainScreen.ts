@@ -1,13 +1,16 @@
 import {Assets, Container, Sprite, Text, Texture, Ticker} from 'pixi.js';
 import {Screen} from './screen.ts';
 import {FancyButton} from "@pixi/ui";
-import {createFancyButton} from "../ui/createButton.ts";
+
 import {AceOfShadowScreen} from "./gameScreens/aceOfShadowScreen.ts";
 import {engine, MinimumEngine} from "../minimumEngine.ts";
 import {PhoenixFlame} from "./gameScreens/phoenixFlame.ts";
 import {MagicWordScreen} from "./gameScreens/magicWordScreen.ts";
+import {createFancyButton} from "../ui/createButton.ts";
 
 export class MainScreen extends Screen {
+    private readonly BUTTON_FLAT_TEXTURE_PATH = './ui/button_rectangle_depth_flat.png';
+    private readonly BUTTON_LINE_TEXTURE_PATH = './ui/button_rectangle_depth_line.png';
     private _label!: Text;
     private _button_aos!: FancyButton;
     private _button_mwo!: FancyButton;
@@ -23,8 +26,8 @@ export class MainScreen extends Screen {
         super.init();
         console.log('MainScreen init');
         
-        await Assets.load('/ui/button_rectangle_depth_flat.png');
-        await Assets.load('/ui/button_rectangle_depth_line.png');
+        await Assets.load(this.BUTTON_FLAT_TEXTURE_PATH);
+        await Assets.load(this.BUTTON_LINE_TEXTURE_PATH);
 
         //   this.resize(window.innerWidth, window.innerHeight);
         MinimumEngine.getInstance().app.renderer.background.color = 0x1099bb;
@@ -63,9 +66,9 @@ export class MainScreen extends Screen {
 
         this._button_aos = createFancyButton(
             "Ace of Shadows",
-            new Sprite(Assets.get('/ui/button_rectangle_depth_flat.png')!),
-            new Sprite(Assets.get('/ui/button_rectangle_depth_line.png')!),
-            new Sprite(Assets.get('/ui/button_rectangle_depth_flat.png')!),
+            new Sprite(Assets.get(this.BUTTON_FLAT_TEXTURE_PATH)!),
+            new Sprite(Assets.get(this.BUTTON_LINE_TEXTURE_PATH)!),
+            new Sprite(Assets.get(this.BUTTON_FLAT_TEXTURE_PATH)!),
             buttonAnimations,
             () => {
                 console.log('Ace of Shadows button pressed');
@@ -78,9 +81,9 @@ export class MainScreen extends Screen {
 
         this._button_mwo = createFancyButton(
             "Magic Words",
-            new Sprite(Assets.get('/ui/button_rectangle_depth_flat.png')!),
-            new Sprite(Assets.get('/ui/button_rectangle_depth_line.png')!),
-            new Sprite(Assets.get('/ui/button_rectangle_depth_flat.png')!),
+            new Sprite(Assets.get(this.BUTTON_FLAT_TEXTURE_PATH)!),
+            new Sprite(Assets.get(this.BUTTON_LINE_TEXTURE_PATH)!),
+            new Sprite(Assets.get(this.BUTTON_FLAT_TEXTURE_PATH)!),
             buttonAnimations,
             () => {
                 console.log('Magic Words button pressed');
@@ -94,9 +97,9 @@ export class MainScreen extends Screen {
 
         this._button_pf = createFancyButton(
             "Phoenix Flame",
-            new Sprite(Assets.get('/ui/button_rectangle_depth_flat.png')!),
-            new Sprite(Assets.get('/ui/button_rectangle_depth_line.png')!),
-            new Sprite(Assets.get('/ui/button_rectangle_depth_flat.png')!),
+            new Sprite(Assets.get(this.BUTTON_FLAT_TEXTURE_PATH)!),
+            new Sprite(Assets.get(this.BUTTON_LINE_TEXTURE_PATH)!),
+            new Sprite(Assets.get(this.BUTTON_FLAT_TEXTURE_PATH)!),
             buttonAnimations,
             () => {
                 console.log('Phoenix Flame button pressed');

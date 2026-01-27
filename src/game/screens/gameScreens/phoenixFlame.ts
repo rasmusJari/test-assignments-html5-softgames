@@ -11,7 +11,7 @@ export class PhoenixFlame extends Screen {
     private _particleContainer!: ParticleContainer;
     private _particleSystem!: ParticleSystem;
     private _texture!: Texture;
-    private _particleAssetPath: string = '/particles/flame_04.png';
+    private _particleAssetPath: string = './particles/flame_04.png';
     private _particleCountText: Text = null as any;
     private _emitterX: number = engine().app.screen.width /2;
     private _emitterY: number = engine().app.screen.height /2;
@@ -20,7 +20,7 @@ export class PhoenixFlame extends Screen {
     public async init(): Promise<void> {
         engine().app.renderer.background.color = 0x000000;
         await Assets.load(this._particleAssetPath);
-        await Assets.load('/art/torch.png')
+        await Assets.load('./art/torch.png')
 
         this._particleCountText = new Text({
             text: 'Particles: 0',
@@ -31,9 +31,9 @@ export class PhoenixFlame extends Screen {
     }
 
     public enter(): void {
-        sound.add('music', '/sfx/taleOfFire.mp3');
+        sound.add('music', './sfx/taleOfFire.mp3');
         sound.play('music', { loop: true, volume: 0.1 });
-        this._torchSprite = new Sprite(Assets.get('/art/torch.png'));
+        this._torchSprite = new Sprite(Assets.get('./art/torch.png'));
         this._torchSprite.anchor.set(0.5, 0);
         this._torchSprite.position.set(this._emitterX, this._emitterY + 50);
         this._root?.addChild(this._torchSprite);

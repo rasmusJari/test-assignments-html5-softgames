@@ -30,11 +30,11 @@ export class AceOfShadow extends Container {
             this.update(ticker);
         });
 
-        await Assets.load('/ui/cardBack_green4.png');
-        this._sfxCardSlide = Sound.from('/sfx/cardSlide7.wav');
+        await Assets.load('./ui/cardBack_green4.png');
+        this._sfxCardSlide = Sound.from('./sfx/cardSlide7.wav');
         this._sfxCardSlide.volume = 0.1;
         
-        this._sfxCardPlace = Sound.from('/sfx/cardSlide8.wav');
+        this._sfxCardPlace = Sound.from('./sfx/cardSlide8.wav');
         this._sfxCardPlace.volume = 0.1;
 
         this._screen.addChild(this);
@@ -46,7 +46,7 @@ export class AceOfShadow extends Container {
         const x = this._width / 2 + 125 + this.iteration * 0.2;
         let y = this._height / 2 - this.iteration * 1;
         for(let i = 0; i < this._numberOfCards; i++){
-            const sprite = new Sprite(Assets.get('/ui/cardBack_green4.png'));
+            const sprite = new Sprite(Assets.get('./ui/cardBack_green4.png'));
             sprite.x = x;
             sprite.y = y;
             sprite.zIndex = -sprite.y; // for proper layering
@@ -60,7 +60,6 @@ export class AceOfShadow extends Container {
     }
     
     private update(ticker: Ticker){
-        console.log("AceOfShadow update");
         const dt = 1000 / 60; // assuming 60 FPS
         this._timer += dt;
         if(this._timer >= this._cardTransferInterval){
