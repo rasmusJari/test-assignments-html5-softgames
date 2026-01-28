@@ -3,8 +3,7 @@ import { MinimumEngine, setEngine } from "./minimumEngine.ts";
 import { MainScreen } from "./screens/mainScreen.ts";
 import { ReloadButton } from "./reloadButton.ts";
 
-// Wait for the iframe / DOM to fully load
-
+// Wait for the iframe / DOM to fully load before initializing. Mainly to support itch.io embeds.
 window.addEventListener('load', async () => {
 
     // Create Pixi Application
@@ -33,11 +32,13 @@ window.addEventListener('load', async () => {
     reloadButton.position.set(window.innerWidth - reloadButton.width, 10);
     app.stage.addChild(reloadButton);
 
+    
     /** ---------- FULLSCREEN HELPERS ---------- */
     function isFullscreen(): boolean {
         return document.fullscreenElement === canvas;
     }
 
+    
     async function requestFullscreen() {
         if (!document.fullscreenElement) {
             try {
@@ -48,6 +49,7 @@ window.addEventListener('load', async () => {
             }
         }
     }
+    
 
     async function toggleFullscreen() {
         if (isFullscreen()) {
@@ -57,8 +59,7 @@ window.addEventListener('load', async () => {
         }
     }
 
-
-
+    
     /** ---------- EVENTS ---------- */
     // Resize Pixi properly
     window.addEventListener('resize', () => {
@@ -72,6 +73,7 @@ window.addEventListener('load', async () => {
         engineResize();
     });
     
+    
     function engineResize(){
         requestAnimationFrame(() =>{
             engine.resize();
@@ -79,6 +81,7 @@ window.addEventListener('load', async () => {
         })
     }
 
+    
     // Keyboard toggle (fallback)
     window.addEventListener('keydown', (e) => {
         if (e.key.toLowerCase() === 'f') {
@@ -86,14 +89,12 @@ window.addEventListener('load', async () => {
         }
     });
 
+    
     // Click once to guarantee fullscreen (important!)
     canvas.addEventListener('click', () => {
         requestFullscreen();
     }, { once: true });
     
-
-    /** ---------- DEFAULT FULLSCREEN ---------- */
-  //  requestFullscreen();
 
     // Show first screen
     engine.screenManager.changeScreen(new MainScreen());

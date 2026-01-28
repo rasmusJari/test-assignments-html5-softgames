@@ -46,8 +46,7 @@ export class PhoenixFlame extends Screen {
         this._root?.addChild(this._particleContainer);
 
         this._particleSystem = new ParticleSystem(this._particleContainer, this._texture, 10);
-
-        // Example: set global defaults
+        
         this._particleSystem.setDefaultConfig({
             velocityXMin: -50,
             velocityXMax: 50,

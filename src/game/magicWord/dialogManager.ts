@@ -106,10 +106,6 @@ export class DialogManager extends Container{
             const bitmap = await createImageBitmap(blob);
             this._emojis[id] = Texture.from(bitmap);
         }
-        
-        // for (const key in this._emojis) {
-        //     console.log('Loaded emoji:', key);
-        // }
     }
 
     
@@ -119,16 +115,13 @@ export class DialogManager extends Container{
             const text = dToken['text'];
             let actor = Array.from(this._avatars).find(a => a.actorName === actorName);
             
-            // remove undefined actors lines?
+            // optional - remove undefined actors lines?
+            // this depends on the designer's intent. If the system should support missing actors,
+            // this check can be omitted. The system handles missing actors gracefully by logging a warning.
             if (!actor) {
                 console.warn(`Actor with name ${actorName} not found for dialog.`);
                 continue;
             }
-            
-            // if(!actor){
-            //     console.warn(`Actor with name ${actorName} not found for dialog. Skipping this dialog.`);
-            //     actor = new Actor(actorName, '', "neutral");
-            // }
             
             this._dialogs.add(new Dialog(actor, text, this));
         }

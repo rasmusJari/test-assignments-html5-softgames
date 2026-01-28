@@ -28,14 +28,12 @@ export class MainScreen extends Screen {
 
     override async init(): Promise<void> {
         super.init();
-        console.log('MainScreen init');
         
         await Assets.load(this.BUTTON_FLAT_TEXTURE_PATH);
         await Assets.load(this.BUTTON_LINE_TEXTURE_PATH);
         
         this._menu = new Container();
-
-        //   this.resize(window.innerWidth, window.innerHeight);
+        
         MinimumEngine.getInstance().app.renderer.background.color = 0x1099bb;
         this._label = new Text({
             text: 'Main Menu',
@@ -46,7 +44,11 @@ export class MainScreen extends Screen {
         });
         this._label.anchor.set(0.5);
         this._menu.addChild(this._label);
+        this.generateMenuButtons();
+    }
 
+    
+    private generateMenuButtons() {
         const buttonAnimations = {
             hover: {
                 pivot: {
@@ -54,7 +56,7 @@ export class MainScreen extends Screen {
                     y: 48 / 2,
                 },
                 props: {
-                    scale: { x: 1.1, y: 1.1 },
+                    scale: {x: 1.1, y: 1.1},
                 },
                 duration: 100,
             },
@@ -64,7 +66,7 @@ export class MainScreen extends Screen {
                     y: 48 / 2,
                 },
                 props: {
-                    scale: { x: 0.9, y: 0.9 },
+                    scale: {x: 0.9, y: 0.9},
                 },
                 duration: 100,
             },
@@ -114,27 +116,19 @@ export class MainScreen extends Screen {
         );
         this._button_pf.anchor.set(0.5);
         this._menu.addChild(this._button_pf);
-        
+
         this.addChild(this._menu);
     }
 
-    public override enter(): void {
-        console.log('MainScreen enter');
-    }
-
+    
     public exit(): void {
         console.log('MainScreen exit');
-        
         this.removeChildren();
     }
-
-    public override update(ticker: Ticker): void {
-        // per-frame logic
-        // console.log(ticker.deltaTime);
-    }
+    
     
     public resize(width: number, height: number): void {
-
+        // this showcases how to scale the canvas while maintaining aspect ratio
         scaleCanvas(width, height, this);
         
         this._menu.position.set(
@@ -146,8 +140,7 @@ export class MainScreen extends Screen {
             0,
             - this.DESIGN_HEIGHT * 0.3
         );
-
-
+        
         this._button_aos.position.set(
             0,
             -this.DESIGN_HEIGHT * 0.3 + 100

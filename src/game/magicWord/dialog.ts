@@ -38,7 +38,7 @@ export class Dialog extends Container {
     
     // draw dialog text box and avatar
     public draw(): void {
-        // box:
+        // draw box:
         this._rectangle = new Sprite(Texture.WHITE);
         this._rectangle.tint = 0x395366;
         this._rectangle.alpha = 1;
@@ -58,11 +58,10 @@ export class Dialog extends Container {
 
         this._avatarSprite.y = this._textBoxY + this._textBoxHeight;
         this.addChild(this._avatarSprite);
-        
-        const text = new Text({text: this._richText});
-        
-        this.addChild(text);
 
+
+        // draw text:
+        // convert to rich text:
         this._richText = new RichTextSprite(
             { fontSize: 24, fill: 0xffffff , wordWrap: true, wordWrapWidth: this._textBoxWidth },
             this._dialogManager.getEmojis(), this._textBoxWidth * 0.8
@@ -75,7 +74,6 @@ export class Dialog extends Container {
     }
 
     public resize(width: number, height: number): void {
-
         this._textBoxX = width * 0.1;
         this._textBoxY = height - 200;
         this._textBoxWidth = width * 0.8;
@@ -96,7 +94,6 @@ export class Dialog extends Container {
         this._rectangle.width = this._textBoxWidth;
         this._rectangle.height = this._textBoxHeight;
         
-        // this._richText.resize(width, height);
         this._richText.refresh(this._textBoxWidth * 0.8);
     }
 }

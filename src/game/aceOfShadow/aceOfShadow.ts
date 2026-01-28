@@ -8,7 +8,6 @@ export class AceOfShadow extends Container {
     private _screen!: Container;
     private _stackA: Set<Sprite>;
     private _stackB: Set<Sprite>;
-    private _spriteCard!: Sprite;
     private _timer: number = 0;
     private _cardTransferInterval: number = 1000; // milliseconds
     private readonly _numberOfCards: number = 144;

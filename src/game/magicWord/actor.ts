@@ -1,11 +1,8 @@
-import {Assets, Sprite, Texture} from "pixi.js";
-import PIXI from "pixi.js";
-import {MinimumEngine} from "../minimumEngine.ts";
+import {Texture} from "pixi.js";
 
 export class Actor{
     private readonly _actorName: string;
     private readonly _avatarUrl: string;
-    // private readonly _alignment: string = "neutral";
     private _alignment: ActorAlignment;
     private _avatarSprite!: Texture;
 
@@ -41,14 +38,8 @@ export class Actor{
         // 3. Create texture directly from bitmap
         const texture = Texture.from(bitmap);
 
-        // const sprite = new Texture(texture);
+        // 4. Store texture
         this._avatarSprite = new Texture(texture);
-        // sprite.x = this._alignment === 'left' ? 50 : 600;
-        // sprite.y = 500;
-        // sprite.width = 128;
-        // sprite.height = 128;
-
-        //MinimumEngine.getInstance().stage.addChild(sprite);
     }
 }
 

@@ -21,24 +21,22 @@ export class MinimumEngine {
         this.screenManager = new ScreenManager();
         this.stage.addChild(this.screenManager['_root']);
         this.app.stage.addChild(this.stage);
-
-        const fpsStyle = { fontSize: 16, fill: 0xffffff };
-        const fpsText = new Text({ text: 'FPS: 0', style: fpsStyle });
+        
+        const fpsText = new Text({ text: 'FPS: 0', style: { fontSize: 16, fill: 0xffffff } });
         fpsText.position.set(10, 10);
         this.stage.addChild(fpsText);
+        
         // fps display
         this.ticker.add((delta) => {
             fpsText.text = `FPS: ${this.ticker.FPS.toFixed(2)}`;
         });
 
+        // clamp to 60 FPS in order to save resources especially on mobile
         this.ticker.maxFPS = 60;
-      //  app.ticker.maxFPS = this.ticker.maxFPS;
     }
 
     public resize(): void {
         this.screenManager.resize();
-        // If using resizeTo: window, Pixi already resized internally
-        // This method exists for consistency + future control
     }
 
     public get width(): number {
@@ -57,7 +55,6 @@ let instance: MinimumEngine | null = null;
  * Get the main application engine
  * This is a simple way to access the engine instance from anywhere in the app
  */
-
 export function engine(): MinimumEngine {
     return instance!;
 }
